@@ -3,35 +3,56 @@ const router = express.Router()
 
 const pool = require("../../db");
 
-//@route GET api/items
-
-//@desc Get All Items
-
-//@access Public
-
-router.get('/', async(req, res) => {
+router.get("/", async(req, res) => {
     try {
         const items = await pool.query("SELECT item_id, item_name, created_at FROM items ORDER BY created_at DESC");
+        if (items.rows.length === 0) throw Error("No items");
 
-        res.json(items.rows);
+        res.status(200).json(items.rows);
     } catch (err) {
-        console.error(err.message);
+        res.status(400).json(err.message);
     }
 });
 
-router.post('/', async(req, res) => {
+router.post("/", async(req, res) => {
+    const { item_name } = req.body;
+
     try {
-        const { item_name } = req.body;
-        const newItem = await pool.query(
+        const item = await pool.query(
             "INSERT INTO items (item_name) VALUES ($1) RETURNING *",
             [item_name]
           );
         
-          res.json(newItem.rows[0])
+        if (item.rows.length === 0) throw Error("Something went wrong saving the item");
+
+        res.status(200).json(item.rows[0])
 
     } catch (err) {
-        console.error(err.message);
+        res.status(400).json(err.message);
     }
-})
+});
+
+router.delete("/:id", async(req, res) => {
+    try {
+        const { id } = req.params;
+
+        const item = await pool.query(
+            "SELECT * FROM items WHERE item_id = $1",
+            [id]
+        );
+        if (item.rows.length === 0) throw Error("No item found");
+
+
+        const deleteItem = await pool.query(
+            "DELETE FROM items WHERE item_id = $1 RETURNING *",
+            [id]
+        );
+        if (deleteItem.rows.length === 0) throw Error("Something went wrong while trying to delete the item");
+    
+        res.status(200).json("Item was deleted");
+    } catch (err) {
+        res.status(400).json(err.message);
+    }
+});
 
 module.exports = router;
