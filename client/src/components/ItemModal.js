@@ -11,7 +11,6 @@ import {
   } from 'reactstrap';
 import { connect } from 'react-redux';
 import { addItem } from '../actions/itemActions';
-import { v4 as uuidv4 } from 'uuid';
 
 const ItemModal = ({addItem}) => {
     const [modal, setModal] = useState(false);
@@ -27,8 +26,7 @@ const ItemModal = ({addItem}) => {
         e.preventDefault();
     
         const newItem = {
-          id: uuidv4(),
-          name: name
+          item_name: name
         };
 
         addItem(newItem)

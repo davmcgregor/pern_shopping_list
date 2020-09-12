@@ -12,7 +12,7 @@ const ShoppingList = ({getItems, item, deleteItem}) => {
     }, [getItems])
     
     const { items } = item;
-    
+
     const onDeleteClick = (id) => {
         deleteItem(id)
     }
@@ -22,18 +22,18 @@ const ShoppingList = ({getItems, item, deleteItem}) => {
             <Container>
                 <ListGroup>
                   <TransitionGroup className="shopping-list">
-                      {items.map(({id, name}) => (
-                        <CSSTransition key={id} timeout={500} classNames="fade">
+                      {items.map(({item_id, item_name}) => (
+                        <CSSTransition key={item_id} timeout={500} classNames="fade">
                             <ListGroupItem>
                             <Button
                                 className="remove-btn"
                                 color="danger"
                                 size="sm"
-                                onClick={() => onDeleteClick(id)}
+                                onClick={() => onDeleteClick(item_id)}
                             >
                                 &times;
                             </Button>
-                                {name}
+                                {item_name}
                             </ListGroupItem>
                         </CSSTransition>
                       ))}
