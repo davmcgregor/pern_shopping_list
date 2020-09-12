@@ -1,45 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect } from 'react'
 import { Container, ListGroup, ListGroupItem, Button } from 'reactstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import { v4 as uuidv4 } from 'uuid';
+import { connect } from 'react-redux';
+import { getItems } from '../actions/itemActions';
+import PropTypes from 'prop-types';
 
-const ShoppingList = () => {
+const ShoppingList = ({getItems, item}) => {
 
-    const [items, setItems] = useState (
-        [
-            {id: uuidv4(), name: 'Eggs'},
-            {id: uuidv4(), name: 'Milk'},
-            {id: uuidv4(), name: 'Carrots'},
-            {id: uuidv4(), name: 'Honey'}
-        ]
-    )
-    console.log(items)
+    useEffect(() => {
+        getItems()
+    }, [getItems])
+    
+    const { items } = item;
+
     return (
         <div>
             <Container>
-                <Button
-                  color="dark"
-                  style={{marginBottom: '2rem'}}
-                  onClick={() => {
-                    const name = prompt('Enter Item')
-                    if(name) {
-                        setItems([...items, {id: uuidv4(), name}])
-                    }
-                  }}
-                >Add Item</Button>
                 <ListGroup>
                   <TransitionGroup className="shopping-list">
                       {items.map(({id, name}) => (
                         <CSSTransition key={id} timeout={500} classNames="fade">
                             <ListGroupItem>
-                            <Button
+                            {/* <Button
                                 className="remove-btn"
                                 color="danger"
                                 size="sm"
                                 onClick={() => setItems(items.filter(item => item.id !== id))}
                             >
                                 &times;
-                            </Button>
+                            </Button> */}
                                 {name}
                             </ListGroupItem>
                         </CSSTransition>
@@ -51,4 +41,13 @@ const ShoppingList = () => {
     )
 }
 
-export default ShoppingList
+ShoppingList.propTypes = {
+    getItems: PropTypes.func.isRequired,
+    item: PropTypes.object.isRequired
+}
+
+const mapStateToProps = (state) => ({
+    item: state.item
+});
+
+export default connect(mapStateToProps, { getItems })(ShoppingList); 
