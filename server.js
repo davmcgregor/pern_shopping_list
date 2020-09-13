@@ -1,17 +1,17 @@
 require('dotenv').config()
 const express = require('express');
-const bodyParser = require('body-parser')
 const path = require('path');
 const cors = require("cors");
 
 const app = express();
 
 // Middleware
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(cors())
 
 // Routes
 app.use("/api/items", require("./routes/api/items"))
+app.use("/api/users", require("./routes/api/users"))
 
 // Serve static assets if in production
 if(process.env.NODE_ENV === 'production') {
