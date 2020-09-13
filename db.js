@@ -1,7 +1,7 @@
 const Pool = require("pg").Pool
 
 const pool = new Pool(
-    process.env.DATABASE_URL ?
+    process.env.NODE_ENV === 'production' ?
     {
         connectionString: process.env.DATABASE_URL,
         ssl: {
