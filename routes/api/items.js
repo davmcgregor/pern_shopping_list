@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const auth = require("../../middleware/auth")
 
 const pool = require("../../db");
 
@@ -14,7 +15,7 @@ router.get("/", async(req, res) => {
     }
 });
 
-router.post("/", async(req, res) => {
+router.post("/", auth, async(req, res) => {
     const { item_name } = req.body;
 
     try {
@@ -32,7 +33,7 @@ router.post("/", async(req, res) => {
     }
 });
 
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", auth, async(req, res) => {
     try {
         const { id } = req.params;
 

@@ -10,6 +10,7 @@ app.use(express.json());
 app.use(cors())
 
 // Routes
+app.use("/api/auth", require("./routes/api/auth"))
 app.use("/api/items", require("./routes/api/items"))
 app.use("/api/users", require("./routes/api/users"))
 
