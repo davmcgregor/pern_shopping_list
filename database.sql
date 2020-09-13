@@ -1,11 +1,5 @@
 CREATE DATABASE shoppinglist;
 
-CREATE TABLE items (
-    item_id SERIAL PRIMARY KEY,
-    item_name VARCHAR(255) NOT NULL,
-    created_at timestamptz DEFAULT Now()
-);
-
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE users (
@@ -15,6 +9,15 @@ CREATE TABLE users (
     user_password VARCHAR(255) NOT NULL,
     registered_at timestamptz DEFAULT Now(),
     PRIMARY KEY(user_id)
+);
+
+CREATE TABLE items (
+    item_id SERIAL,
+    user_id uuid,
+    item_name VARCHAR(255) NOT NULL,
+    created_at timestamptz DEFAULT Now(),
+    PRIMARY KEY(item_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 INSERT INTO items (item_name) VALUES ('apples');

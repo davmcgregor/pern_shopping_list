@@ -1,6 +1,8 @@
+require('dotenv').config()
 const express = require("express");
 const router = express.Router();
 const bcrypt = require('bcryptjs'); 
+const jwt = require("jsonwebtoken");
 
 const pool = require("../../db");
 
@@ -32,7 +34,12 @@ router.post("/register", async(req, res) => {
         [name, email, hash]
         );
 
+        const token = jwt.sign({ id: newUser.rows[0].user_id }, process.env.jwtSecret, {
+            expiresIn: 3600
+          });
+
         res.status(200).json({
+            token,
             user: {
                 id: newUser.rows[0].user_id,
                 name: newUser.rows[0].user_name,
