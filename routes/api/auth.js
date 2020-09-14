@@ -12,7 +12,7 @@ router.post('/login', async (req, res) => {
   
     // Simple validation
     if (!email || !password) {
-      return res.status(400).json('Please enter all fields');
+      return res.status(400).json({ msg: 'Please enter all fields' });
     }
   
     try {
@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
         }
     });
     } catch (err) {
-      res.status(400).json(err.message);
+      res.status(400).json({ msg: err.message });
     }
   });
 
@@ -46,7 +46,7 @@ router.post("/register", async(req, res) => {
     const { email, name, password } = req.body;
 
     if(!name || !email || !password) {
-        return res.status(400).json("Please enter all fields")
+        return res.status(400).json({ msg: "Please enter all fields" })
     }
 
     try {
@@ -55,9 +55,8 @@ router.post("/register", async(req, res) => {
             email
         ]);
 
-        if (user.rows.length) {
-            return res.status(400).json("User already exists");
-        }
+        if (user.rows.length) throw Error ("User already exists");
+        
 
         const salt = await bcrypt.genSalt(10);
         if (!salt) throw Error('Something went wrong with bcrypt');
@@ -83,7 +82,7 @@ router.post("/register", async(req, res) => {
             }
         });
     } catch (err) {
-        res.status(400).json(err.message);
+        res.status(400).json({ error: err.message });
     }
 });
 
@@ -95,7 +94,7 @@ router.get('/user', auth, async (req, res) => {
         if (!user.rows.length) throw Error('User does not exist');
         res.json(user.rows[0]);
     } catch (err) {
-      res.status(400).json(err.message);
+      res.status(400).json({ msg: err.message });
     }
   });
 
